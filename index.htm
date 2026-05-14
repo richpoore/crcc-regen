@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="crcc-logo-regen-1.png">
     <title>CrossRoads Community Church Unofficial Regen Page</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 </head>
 <body>
     <div class="container">
@@ -18,17 +19,58 @@
             <h2>Potluck Sign-Up</h2>
             <p>Please review the needed items below. Click into the yellow box next to an item and type your name to claim it!</p>
             </div>
-
-            <iframe 
-            src="https://docs.google.com/spreadsheets/d/1Wiw0Hm5opS6iqzeZKQEhBsuU1TpaMkgN9zHxG1AQhSY/edit?usp=drivesdk" 
-            width="100%" 
-            height="600px" 
-            style="border: 2px solid #333; border-radius: 8px;" 
-            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-pointer-lock" 
-            loading="lazy" 
-            referrerpolicy="no-referrer">
-            </iframe>
+            
+            <table id="potluckTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Claimed By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
 
         </div>
+    </body>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function() {
+            const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQT5CPPtXzkPb5uih3zTupS3X03h2sXmFHhIyBFdFsNxhoSlidnxiR4kfa2qt6nz50vMR0MhH9Bjz24/pub?gid=0&single=true&output=csv';
+
+            $.ajax({
+                url: csvUrl,
+                dataType: 'text',
+                success: function(data) {
+                    console.log("Raw CSV data:", data);
+                    const lines = data.split(/\r\n|\n/);
+                    console.log("Split lines:", lines);
+                    const tableData = [];
+
+                    // Assuming the first line is the header, skip it for data
+                    for (let i = 1; i < lines.length; i++) {
+                        if (lines[i]) { // Ensure the line is not empty
+                            const columns = lines[i].split(',');
+                            tableData.push(columns);
+                        }
+                    }
+                    console.log("Parsed table data:", tableData);
+
+                    $('#potluckTable').DataTable({
+                        data: tableData,
+                        columns: [
+                            { title: "Item" },
+                            { title: "Claimed By" }
+                        ],
+                        paging: false, // Disable pagination if all items should be visible
+                        searching: false, // Disable search if not needed
+                        info: false // Disable info text
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
