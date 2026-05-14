@@ -16,6 +16,30 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  box-sizing: border-box;
+  padding: 1rem;
+  text-align: center;
+}
+
+.slide img {
+  max-width: 81%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
 h1 {
     color: #2c3e50; /* A darker, more prominent color for the heading */
     text-align: center;
